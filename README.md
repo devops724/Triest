@@ -21,8 +21,23 @@ TRIEST-IMPR
 
 # Execution Instructions:
 
+0) install package requirements
+   pip install matplotlib
+   for python3 
+   Debian,Ubuntu:
+   sudo apt-get install python3-tk
+   Fedora:
+   sudo dnf install python3-tkinter
+   Centos,Redhat:
+   sudo yum install python34-tkinter
+   or
+   sudo yum install rh-python36-python-tkinter
+   depend on your python version installed
+
 1) Run scripts triest_impr.py for Triest-Impr algorithm and triest_base for Triest-Base
-   algorithm.  
+   algorithm.  using --filename argument to path file, there is some sample files in data folder.
+   example:
+   python triest_impr.py --filename data/out.advogato
 2) The desired dataset and values of M can be set in variables datafile and M
    respectively in the main() method of either script.  
 3) The code assumes that the first two columns of the datafile are in the form: \<source_node> \<destination_node>.  
