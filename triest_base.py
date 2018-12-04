@@ -3,7 +3,7 @@ from edge_store import edgestore
 from collections import defaultdict
 import random
 import matplotlib.pyplot as plt
-
+import argparse, sys
 
 class triest_base:
 
@@ -30,7 +30,7 @@ class triest_base:
 
     #Updates local and global counters
     #Params:    t: timestamp,  (u,v): edge
-    def update_counters(self,operation,(u,v)):
+    def update_counters(self,operation,u,v):
         vertices = self._S.get_vertice_list()
         if u not in vertices or v not in vertices:
             return
@@ -84,7 +84,7 @@ class triest_base:
                 u1,v1 = edge_list[e_idx]
                 # print "edge to be removed (%s,%s)" % (u1, v1)
                 self._S.delete(u1, v1)
-                self.update_counters("-",(u1,v1))
+                self.update_counters("-",u1,v1)
 
                 return True
 
@@ -109,22 +109,22 @@ class triest_base:
             t=t+1
             if self.sample_edge((u,v),t):
                 self._S.add(u,v)
-                self.update_counters("+",(u,v))
+                self.update_counters("+",u,v)
 
         #print "final Sample S: %s"%(self._S.printContents())
-        print "M = %d"%(self._M)
-        print "Local_Ts %s"%(self._local_T)
-        print "Global_T: %d"%(self._global_T)
+        print("M = %d"%(self._M))
+        print("Local_Ts %s"%(self._local_T))
+        print("Global_T: %d"%(self._global_T))
         # print "sample edge set %s"%(self._S.get_edges())\
         global_triangles = int(self.estimate_triangles(t))
-        print "Global Triangles (Estimate * Global_T) = %d" % (global_triangles)
+        print("Global Triangles (Estimate * Global_T) = %d" % (global_triangles))
         print ("--------------------")
         return  global_triangles
 
     #Calculates estimate.
     def estimate_triangles(self,t):
         estimate = t*(t-1)*(t-2)/(self._M*(self._M-1)*(self._M-2))
-        print "Eta: %f"%(estimate)
+        print("Eta: %f"%(estimate))
         if estimate < 1:
             estimate =1
         return int(estimate) * self._global_T
@@ -136,14 +136,22 @@ def test_file(datafile):
     f = open(datafile)
     for line in f:
         u, v, weight = line.split()
-        print "%s,%s"%(u,v)
+        print ("%s,%s"%(u,v))
 
 
 if __name__ == '__main__':
     random.seed(1234)
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--filename', help='File name save data on, Example :Schedule.xlsx',type=str)
+
+
+    args=parser.parse_args()
+    if not args.filename:
+        print("Error: no filename argument , pass filename argument using --filename argument")
+        exit()
     #datafile = "data/dummy.txt"
     #datafile = "data/out.subelj_euroroad_euroroad"
-    datafile = "data/out.advogato"
+    datafile = args.filename#"data/out.advogato"
     #datafile = "data/out.petster-friendships-hamster-uniq"
     #M = [40000]
     M = [3000,6000,9000,12000,15000,18000,21000,24000,27000,30000,40000]

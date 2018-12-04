@@ -43,7 +43,7 @@ class edgestore:
 
 
     def printContents(self):
-        print self._store
+        print (self._store)
 
     def get_neighbours(self,u):
         return self._store[u]
@@ -73,8 +73,8 @@ def testEdgeStore(datafile):
             edge_store.delete(u,v)
     #print edge_store._store
     edge_store.printContents()
-    print "neighbours of 3:"
-    print edge_store.get_neighbours('3')
+    print ("neighbours of 3:")
+    print (edge_store.get_neighbours('3'))
     edge_store.add(4,5)
     edge_store.printContents()
     edge_store.delete(4,5)

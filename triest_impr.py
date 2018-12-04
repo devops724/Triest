@@ -3,7 +3,7 @@ from edge_store import edgestore
 from collections import defaultdict
 import random
 import matplotlib.pyplot as plt
-
+import sys, argparse
 
 class triest_impr:
 
@@ -30,7 +30,7 @@ class triest_impr:
 
     #Updates local and global counters
     #Params:    t: timestamp,  (u,v): edge
-    def update_counters(self,t,(u,v)):
+    def update_counters(self,t,u,v):
         vertices = self._S.get_vertice_list()
         if u not in vertices or v not in vertices:
             return
@@ -92,28 +92,36 @@ class triest_impr:
                 #print "edge (%s,%s) already in sample"%(u,v)
                 continue
             t=t+1
-            self.update_counters(t,(u, v))
+            self.update_counters(t,u, v)
             if self.sample_edge((u,v),t):
                 self._S.add(u,v)
 
-        print "M = %d" % (self._M)
-        print "Local Triangles %s"%(self._local_T)
-        print "Global Triangles = %d" % (int(self._global_T))
-        print "----------------------"
+        print ("M = %d" % (self._M))
+        print ("Local Triangles %s"%(self._local_T))
+        print ("Global Triangles = %d" % (int(self._global_T)))
+        print ("----------------------")
         return int(self._global_T)
 
 def test_file(datafile):
     f = open(datafile)
     for line in f:
         u, v, weight = line.split()
-        print "%s,%s"%(u,v)
+        print ("%s,%s"%(u,v))
 
 
 if __name__ == '__main__':
     random.seed(14)
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--filename', help='File name save data on, Example :Schedule.xlsx',type=str)
+
+
+    args=parser.parse_args()
+    if not args.filename:
+        print("Error: no filename argument , pass filename argument using --filename argument")
+        exit()
     #datafile = "data/dummy.txt"
     #datafile = "data/out.subelj_euroroad_euroroad"
-    datafile = "data/out.advogato"
+    datafile = args.filename#"data/out.advogato"
     #datafile = "data/out.petster-friendships-hamster-uniq"
     #M = [500,1000,1500,2000,2500,3000,3500,4000]
     M = [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000, 30000, 40000]
